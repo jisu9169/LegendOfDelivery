@@ -11,6 +11,7 @@ import com.sparta.legendofdelivery.domain.order.repository.OrderRepository;
 import com.sparta.legendofdelivery.domain.review.dto.CreateReviewRequestDto;
 import com.sparta.legendofdelivery.domain.review.dto.CreateReviewResponseDto;
 import com.sparta.legendofdelivery.domain.review.dto.DeleteReviewRequestDto;
+import com.sparta.legendofdelivery.global.dto.PageRequestDto;
 import com.sparta.legendofdelivery.domain.review.dto.ReviewResponseDto;
 import com.sparta.legendofdelivery.domain.review.dto.StoreByReviewResponseDto;
 import com.sparta.legendofdelivery.domain.review.dto.UpdateReviewRequestDto;
@@ -24,8 +25,11 @@ import com.sparta.legendofdelivery.domain.user.service.UserService;
 import com.sparta.legendofdelivery.global.exception.BadRequestException;
 import com.sparta.legendofdelivery.global.exception.NotFoundException;
 import com.sparta.legendofdelivery.global.exception.UnauthorizedException;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,21 +71,23 @@ public class ReviewService {
   }
 
   @Transactional(readOnly = true)
-  public StoreByReviewResponseDto getStoreReviewList(Long storeId) {
+  public StoreByReviewResponseDto getStoreReviewList(Long storeId, PageRequestDto pagerequestDto) {
+    Pageable pageable = getReviewPageable(pagerequestDto);
+
     Store store = storeService.findStoreById(storeId);
     User user = userService.getUser();
-    List<Review> reviewList = reviewRepository.findByUserAndStore(user, store);
+    Page<Review> reviewList = reviewRepository.findByUserAndStore(user, store, pageable);
     if (null == reviewList) {
       throw new NotFoundException(STORE_REVIEW_NOT_FOUND.getMessage());
     }
-
     return new StoreByReviewResponseDto(storeId, user.getUserId(), reviewList);
   }
 
   @Transactional(readOnly = true)
-  public UserReviewResponseDto getUserReviewList() {
+  public UserReviewResponseDto getUserReviewList(PageRequestDto pagerequestDto) {
     User user = userService.getUser();
-    List<Review> reviewList = reviewRepository.findByUser(user);
+    Pageable pageable = getReviewPageable(pagerequestDto);
+    Page<Review> reviewList = reviewRepository.findByUser(user, pageable);
     if (null == reviewList) {
       throw new NotFoundException(REVIEW_NOT_FOUND.getMessage());
     }
@@ -108,6 +114,12 @@ public class ReviewService {
 
   }
 
+  public Pageable getReviewPageable(PageRequestDto pagerequestDto) {
+    Sort.Direction direction = pagerequestDto.isAsc() ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+    Sort sort = Sort.by(direction, pagerequestDto.getSortBy());
+    return PageRequest.of(pagerequestDto.getPage()-1, pagerequestDto.getSize(), sort);
+  }
 
   public Review findByReviewId(Long reviewId) {
     return reviewRepository.findById(reviewId)

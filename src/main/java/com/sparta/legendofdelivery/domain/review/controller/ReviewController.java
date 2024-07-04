@@ -9,6 +9,7 @@ import static com.sparta.legendofdelivery.global.entity.successMessage.USER_REVI
 import com.sparta.legendofdelivery.domain.review.dto.CreateReviewRequestDto;
 import com.sparta.legendofdelivery.domain.review.dto.CreateReviewResponseDto;
 import com.sparta.legendofdelivery.domain.review.dto.DeleteReviewRequestDto;
+import com.sparta.legendofdelivery.global.dto.PageRequestDto;
 import com.sparta.legendofdelivery.domain.review.dto.ReviewResponseDto;
 import com.sparta.legendofdelivery.domain.review.dto.StoreByReviewResponseDto;
 import com.sparta.legendofdelivery.domain.review.dto.UpdateReviewRequestDto;
@@ -62,13 +63,14 @@ public class ReviewController {
 
   @GetMapping("/stores/{storeId}")
   public ResponseEntity<DataResponse<StoreByReviewResponseDto>> getStoreReviewList(
-      @PathVariable Long storeId) {
+      @PathVariable Long storeId, @RequestBody PageRequestDto pageRequestDto
+  ) {
 
     return ResponseEntity.ok(
         new DataResponse<>(
             STORE_REVIEWS_FETCHED.getStatus(),
             STORE_REVIEWS_FETCHED.getMessage(),
-            reviewService.getStoreReviewList(storeId)
+            reviewService.getStoreReviewList(storeId, pageRequestDto)
         )
     );
   }

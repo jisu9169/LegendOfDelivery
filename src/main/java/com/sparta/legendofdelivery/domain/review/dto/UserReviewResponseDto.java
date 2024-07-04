@@ -1,10 +1,10 @@
 package com.sparta.legendofdelivery.domain.review.dto;
 
 import com.sparta.legendofdelivery.domain.review.entity.Review;
-import lombok.Getter;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.Getter;
+import org.springframework.data.domain.Page;
 
 @Getter
 public class UserReviewResponseDto {
@@ -12,7 +12,7 @@ public class UserReviewResponseDto {
   private final String userId;
   private final List<ReviewResponseDto> responseDtoList;
 
-  public UserReviewResponseDto(String userId, List<Review> reviews) {
+  public UserReviewResponseDto(String userId, Page<Review> reviews) {
     this.userId = userId;
     this.responseDtoList = reviews.stream()
                                           .map(review -> new ReviewResponseDto(
