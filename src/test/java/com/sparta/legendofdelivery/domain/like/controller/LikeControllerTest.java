@@ -1,6 +1,5 @@
 package com.sparta.legendofdelivery.domain.like.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.legendofdelivery.MockSpringSecurityFilter;
 import com.sparta.legendofdelivery.domain.like.service.LikeService;
 import com.sparta.legendofdelivery.domain.review.entity.Review;
@@ -31,6 +30,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.security.Principal;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -104,7 +104,7 @@ class LikeControllerTest {
 
         MessageResponse response = new MessageResponse(200, "좋아요 등록에 성공했습니다.");
 
-        when(likeService.addLike(any(Long.class), any(User.class))).thenReturn(response);
+        doNothing().when(likeService).addLike(any(Long.class), any(User.class));
 
         mvc.perform(post("/api/reviews/{reviewId}/like", review.getId())
                         .contentType(MediaType.APPLICATION_JSON)

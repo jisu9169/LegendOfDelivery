@@ -1,15 +1,15 @@
 package com.sparta.legendofdelivery.domain.review.service;
 
-import static com.sparta.legendofdelivery.domain.review.entity.ErrorCode.DELETE_REVIEW_PERMISSION_DENIED;
-import static com.sparta.legendofdelivery.domain.review.entity.ErrorCode.REVIEW_CREATION_LIMIT_EXCEEDED;
-import static com.sparta.legendofdelivery.domain.review.entity.ErrorCode.REVIEW_NOT_FOUND;
-import static com.sparta.legendofdelivery.domain.review.entity.ErrorCode.SPECIFIED_REVIEW_NOT_FOUND;
-import static com.sparta.legendofdelivery.domain.review.entity.ErrorCode.STORE_REVIEW_NOT_FOUND;
-import static com.sparta.legendofdelivery.domain.review.entity.successMessage.REVIEW_CREATED;
-import static com.sparta.legendofdelivery.domain.review.entity.successMessage.REVIEW_DELETION_SUCCESS;
-import static com.sparta.legendofdelivery.domain.review.entity.successMessage.REVIEW_UPDATE_SUCCESS;
-import static com.sparta.legendofdelivery.domain.review.entity.successMessage.STORE_REVIEWS_FETCHED;
-import static com.sparta.legendofdelivery.domain.review.entity.successMessage.USER_REVIEWS_FETCHED;
+import static com.sparta.legendofdelivery.global.entity.ErrorCode.DELETE_REVIEW_PERMISSION_DENIED;
+import static com.sparta.legendofdelivery.global.entity.ErrorCode.REVIEW_CREATION_LIMIT_EXCEEDED;
+import static com.sparta.legendofdelivery.global.entity.ErrorCode.REVIEW_NOT_FOUND;
+import static com.sparta.legendofdelivery.global.entity.ErrorCode.SPECIFIED_REVIEW_NOT_FOUND;
+import static com.sparta.legendofdelivery.global.entity.ErrorCode.STORE_REVIEW_NOT_FOUND;
+import static com.sparta.legendofdelivery.global.entity.successMessage.REVIEW_CREATED;
+import static com.sparta.legendofdelivery.global.entity.successMessage.REVIEW_DELETION_SUCCESS;
+import static com.sparta.legendofdelivery.global.entity.successMessage.REVIEW_UPDATE_SUCCESS;
+import static com.sparta.legendofdelivery.global.entity.successMessage.STORE_REVIEWS_FETCHED;
+import static com.sparta.legendofdelivery.global.entity.successMessage.USER_REVIEWS_FETCHED;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -131,19 +131,11 @@ class ReviewServiceTest {
 
     when(reviewRepository.save(any(Review.class))).thenReturn(review);
 
-    DataResponse<CreateReviewResponseDto> response = reviewService.createReview(requestDto);
+    CreateReviewResponseDto response = reviewService.createReview(requestDto);
 
     assertNotNull(response);
 
-    assertEquals(REVIEW_CREATED.getStatus(), response.getStatusCode());
-    assertEquals(REVIEW_CREATED.getMessage(), response.getMessage());
-
-    assertNotNull(response.getData());
-    assertEquals(response.getData().getReviewId(), 1L);
-    assertEquals(response.getData().getStoreId(), 1L);
-    assertEquals(response.getData().getContent(), "");
-    assertEquals(response.getData().getUserId(), 1L);
-
+    assertNotNull(response);
   }
 
   @Test

@@ -1,10 +1,11 @@
 package com.sparta.legendofdelivery.domain.review.controller;
 
-import static com.sparta.legendofdelivery.domain.review.entity.successMessage.REVIEW_CREATED;
-import static com.sparta.legendofdelivery.domain.review.entity.successMessage.REVIEW_DELETION_SUCCESS;
-import static com.sparta.legendofdelivery.domain.review.entity.successMessage.REVIEW_UPDATE_SUCCESS;
-import static com.sparta.legendofdelivery.domain.review.entity.successMessage.STORE_REVIEWS_FETCHED;
+import static com.sparta.legendofdelivery.global.entity.successMessage.REVIEW_CREATED;
+import static com.sparta.legendofdelivery.global.entity.successMessage.REVIEW_DELETION_SUCCESS;
+import static com.sparta.legendofdelivery.global.entity.successMessage.REVIEW_UPDATE_SUCCESS;
+import static com.sparta.legendofdelivery.global.entity.successMessage.STORE_REVIEWS_FETCHED;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -48,8 +49,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -164,7 +163,7 @@ class ReviewControllerTest {
     DataResponse<CreateReviewResponseDto> response =
         new DataResponse<>(REVIEW_CREATED.getStatus(), REVIEW_CREATED.getMessage(), responseDto);
 
-    when(reviewService.createReview(any(CreateReviewRequestDto.class))).thenReturn(response);
+    when(reviewService.createReview(any(CreateReviewRequestDto.class))).thenReturn(responseDto);
 
     String jsonRequest = objectMapper.writeValueAsString(requestDto);
 
@@ -191,7 +190,7 @@ class ReviewControllerTest {
     DataResponse<StoreByReviewResponseDto> response =
         new DataResponse<>(STORE_REVIEWS_FETCHED.getStatus(), STORE_REVIEWS_FETCHED.getMessage(), storeByReviewResponseDto);
 
-    when(reviewService.getStoreReviewList(any(Long.class))).thenReturn(response);
+    when(reviewService.getStoreReviewList(any(Long.class))).thenReturn(storeByReviewResponseDto);
 
     mvc.perform(get("/api/reviews/stores/{storedId}", store.getId())
             .contentType(MediaType.APPLICATION_JSON)
@@ -211,7 +210,7 @@ class ReviewControllerTest {
     UserReviewResponseDto userReviewResponseDto = new UserReviewResponseDto(user.getUserId(), reviewList);
     DataResponse<UserReviewResponseDto> response = new DataResponse<>(STORE_REVIEWS_FETCHED.getStatus(), STORE_REVIEWS_FETCHED.getMessage(), userReviewResponseDto);
 
-    when(reviewService.getUserReviewList()).thenReturn(response);
+    when(reviewService.getUserReviewList()).thenReturn(userReviewResponseDto);
 
     mvc.perform(get("/api/reviews/users")
             .contentType(MediaType.APPLICATION_JSON)
@@ -229,7 +228,8 @@ class ReviewControllerTest {
 
     MessageResponse response = new MessageResponse(REVIEW_DELETION_SUCCESS.getStatus(), REVIEW_DELETION_SUCCESS.getMessage());
 
-    when(reviewService.deleteReview(any(Long.class), any(DeleteReviewRequestDto.class))).thenReturn(response);
+    doNothing().when(reviewService).deleteReview(any(Long.class), any(DeleteReviewRequestDto.class));
+
 
     String jsonRequest = objectMapper.writeValueAsString(requestDto);
 
@@ -252,7 +252,9 @@ class ReviewControllerTest {
 
     MessageResponse response = new MessageResponse(REVIEW_UPDATE_SUCCESS.getStatus(), REVIEW_UPDATE_SUCCESS.getMessage());
 
-    when(reviewService.updateReview(any(Long.class), any(UpdateReviewRequestDto.class))).thenReturn(response);
+    doNothing().when(reviewService).updateReview(any(Long.class), any(UpdateReviewRequestDto.class));
+
+
 
     String jsonRequest = objectMapper.writeValueAsString(requestDto);
 
