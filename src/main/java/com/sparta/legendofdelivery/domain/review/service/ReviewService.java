@@ -6,15 +6,12 @@ import static com.sparta.legendofdelivery.global.entity.ErrorCode.REVIEW_CREATIO
 import static com.sparta.legendofdelivery.global.entity.ErrorCode.REVIEW_NOT_FOUND;
 import static com.sparta.legendofdelivery.global.entity.ErrorCode.SPECIFIED_REVIEW_NOT_FOUND;
 import static com.sparta.legendofdelivery.global.entity.ErrorCode.STORE_REVIEW_NOT_FOUND;
-import static com.sparta.legendofdelivery.global.entity.successMessage.REVIEW_DELETION_SUCCESS;
-import static com.sparta.legendofdelivery.global.entity.successMessage.REVIEW_UPDATE_SUCCESS;
-import static com.sparta.legendofdelivery.global.entity.successMessage.STORE_REVIEWS_FETCHED;
-import static com.sparta.legendofdelivery.global.entity.successMessage.USER_REVIEWS_FETCHED;
 
 import com.sparta.legendofdelivery.domain.order.repository.OrderRepository;
 import com.sparta.legendofdelivery.domain.review.dto.CreateReviewRequestDto;
 import com.sparta.legendofdelivery.domain.review.dto.CreateReviewResponseDto;
 import com.sparta.legendofdelivery.domain.review.dto.DeleteReviewRequestDto;
+import com.sparta.legendofdelivery.domain.review.dto.ReviewResponseDto;
 import com.sparta.legendofdelivery.domain.review.dto.StoreByReviewResponseDto;
 import com.sparta.legendofdelivery.domain.review.dto.UpdateReviewRequestDto;
 import com.sparta.legendofdelivery.domain.review.dto.UserReviewResponseDto;
@@ -24,8 +21,6 @@ import com.sparta.legendofdelivery.domain.store.entity.Store;
 import com.sparta.legendofdelivery.domain.store.service.StoreService;
 import com.sparta.legendofdelivery.domain.user.entity.User;
 import com.sparta.legendofdelivery.domain.user.service.UserService;
-import com.sparta.legendofdelivery.global.dto.DataResponse;
-import com.sparta.legendofdelivery.global.dto.MessageResponse;
 import com.sparta.legendofdelivery.global.exception.BadRequestException;
 import com.sparta.legendofdelivery.global.exception.NotFoundException;
 import com.sparta.legendofdelivery.global.exception.UnauthorizedException;
@@ -64,6 +59,11 @@ public class ReviewService {
 
     return new CreateReviewResponseDto(review);
 
+  }
+
+  public ReviewResponseDto getReview(Long reviewId) {
+    Review review = findByReviewId(reviewId);
+    return new ReviewResponseDto(review);
   }
 
   @Transactional(readOnly = true)
@@ -119,4 +119,6 @@ public class ReviewService {
       throw new UnauthorizedException(DELETE_REVIEW_PERMISSION_DENIED.getMessage());
     }
   }
+
+
 }

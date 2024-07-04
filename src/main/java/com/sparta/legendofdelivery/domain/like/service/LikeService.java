@@ -38,19 +38,21 @@ public class LikeService {
 
     Like like = new Like(review, user);
     likeRepository.save(like);
+    review.incrementLikeCount();
 
   }
 
   @Transactional
   public void deleteLike(Long reviewId, User user) {
 
-    reviewService.findByReviewId(reviewId);
+    Review review = reviewService.findByReviewId(reviewId);
     Like checkIslike = findLikeByReviewIdAndUserId(reviewId, user.getId());
     if (null == checkIslike ) {
       throw new NotFoundException(REVIEW_NOT_LIKED.getMessage());
     }
 
     likeRepository.delete(checkIslike);
+    review.decrementLikeCount();
   }
 
   private Like findLikeByReviewIdAndUserId(Long reviewId, Long userId) {

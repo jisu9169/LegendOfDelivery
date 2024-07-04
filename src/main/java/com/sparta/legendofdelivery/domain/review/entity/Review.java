@@ -42,6 +42,8 @@ public class Review extends Timestamped {
   @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Like> likeList = new ArrayList<>();
 
+  private int likeCount;
+
   public Review(CreateReviewRequestDto requestDto,Store store, User user) {
     this.content = requestDto.getComment();
     this.store = store;
@@ -54,4 +56,13 @@ public class Review extends Timestamped {
     this.user = user;
   }
 
+  public void incrementLikeCount() {
+    this.likeCount++;
+  }
+
+  public void decrementLikeCount() {
+    if(likeCount > 0) {
+      likeCount--;
+    }
+  }
 }

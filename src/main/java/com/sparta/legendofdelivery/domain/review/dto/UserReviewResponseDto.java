@@ -19,7 +19,8 @@ public class UserReviewResponseDto {
                                                   review.getId(),
                                                   review.getContent(),
                                                   review.getCreateAt(),
-                                                  review.getModifiedAt()
+                                                  review.getModifiedAt(),
+                                              review.getLikeCount()
                                               )
                                           )
                                           .collect(Collectors.toList());
