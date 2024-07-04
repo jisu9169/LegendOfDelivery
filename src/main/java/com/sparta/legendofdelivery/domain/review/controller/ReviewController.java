@@ -76,13 +76,13 @@ public class ReviewController {
   }
 
   @GetMapping("/my")
-  public ResponseEntity<DataResponse<UserReviewResponseDto>> getUserReviewList() {
+  public ResponseEntity<DataResponse<UserReviewResponseDto>> getUserReviewList(@RequestBody PageRequestDto pageRequestDto) {
 
     return ResponseEntity.ok(
         new DataResponse<>(
             USER_REVIEWS_FETCHED.getStatus(),
             USER_REVIEWS_FETCHED.getMessage(),
-            reviewService.getUserReviewList()
+            reviewService.getUserReviewList(pageRequestDto)
         )
     );
   }
