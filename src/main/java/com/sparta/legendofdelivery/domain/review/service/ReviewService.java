@@ -11,7 +11,6 @@ import com.sparta.legendofdelivery.domain.order.repository.OrderRepository;
 import com.sparta.legendofdelivery.domain.review.dto.CreateReviewRequestDto;
 import com.sparta.legendofdelivery.domain.review.dto.CreateReviewResponseDto;
 import com.sparta.legendofdelivery.domain.review.dto.DeleteReviewRequestDto;
-import com.sparta.legendofdelivery.global.dto.PageRequestDto;
 import com.sparta.legendofdelivery.domain.review.dto.ReviewResponseDto;
 import com.sparta.legendofdelivery.domain.review.dto.StoreByReviewResponseDto;
 import com.sparta.legendofdelivery.domain.review.dto.UpdateReviewRequestDto;
@@ -22,6 +21,7 @@ import com.sparta.legendofdelivery.domain.store.entity.Store;
 import com.sparta.legendofdelivery.domain.store.service.StoreService;
 import com.sparta.legendofdelivery.domain.user.entity.User;
 import com.sparta.legendofdelivery.domain.user.service.UserService;
+import com.sparta.legendofdelivery.global.dto.PageRequestDto;
 import com.sparta.legendofdelivery.global.exception.BadRequestException;
 import com.sparta.legendofdelivery.global.exception.NotFoundException;
 import com.sparta.legendofdelivery.global.exception.UnauthorizedException;
@@ -72,8 +72,7 @@ public class ReviewService {
 
   @Transactional(readOnly = true)
   public StoreByReviewResponseDto getStoreReviewList(Long storeId, PageRequestDto pagerequestDto) {
-    Pageable pageable = getReviewPageable(pagerequestDto);
-
+    Pageable pageable = getPageable(pagerequestDto);
     Store store = storeService.findStoreById(storeId);
     User user = userService.getUser();
     Page<Review> reviewList = reviewRepository.findByUserAndStore(user, store, pageable);
@@ -86,7 +85,7 @@ public class ReviewService {
   @Transactional(readOnly = true)
   public UserReviewResponseDto getUserReviewList(PageRequestDto pagerequestDto) {
     User user = userService.getUser();
-    Pageable pageable = getReviewPageable(pagerequestDto);
+    Pageable pageable = getPageable(pagerequestDto);
     Page<Review> reviewList = reviewRepository.findByUser(user, pageable);
     if (null == reviewList) {
       throw new NotFoundException(REVIEW_NOT_FOUND.getMessage());
@@ -114,11 +113,11 @@ public class ReviewService {
 
   }
 
-  public Pageable getReviewPageable(PageRequestDto pagerequestDto) {
+  public Pageable getPageable(PageRequestDto pagerequestDto) {
     Sort.Direction direction = pagerequestDto.isAsc() ? Sort.Direction.ASC : Sort.Direction.DESC;
 
     Sort sort = Sort.by(direction, pagerequestDto.getSortBy());
-    return PageRequest.of(pagerequestDto.getPage()-1, pagerequestDto.getSize(), sort);
+    return PageRequest.of(pagerequestDto.getPage() - 1, pagerequestDto.getSize(), sort);
   }
 
   public Review findByReviewId(Long reviewId) {

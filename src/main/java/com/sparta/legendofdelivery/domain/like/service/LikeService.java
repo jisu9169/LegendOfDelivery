@@ -6,13 +6,18 @@ import static com.sparta.legendofdelivery.global.entity.ErrorCode.REVIEW_NOT_LIK
 
 import com.sparta.legendofdelivery.domain.like.entity.Like;
 import com.sparta.legendofdelivery.domain.like.repository.LikeRepository;
+import com.sparta.legendofdelivery.domain.review.dto.UserReviewResponseDto;
 import com.sparta.legendofdelivery.domain.review.entity.Review;
+import com.sparta.legendofdelivery.domain.review.repository.ReviewRepository;
 import com.sparta.legendofdelivery.domain.review.service.ReviewService;
 import com.sparta.legendofdelivery.domain.user.entity.User;
+import com.sparta.legendofdelivery.global.dto.PageRequestDto;
 import com.sparta.legendofdelivery.global.exception.BadRequestException;
 import com.sparta.legendofdelivery.global.exception.NotFoundException;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class LikeService {
 
   private final LikeRepository likeRepository;
+  private final ReviewRepository reviewRepository;
 
   private final ReviewService reviewService;
 
@@ -55,8 +61,17 @@ public class LikeService {
     review.decrementLikeCount();
   }
 
+  @Transactional(readOnly = true)
+  public UserReviewResponseDto getLikeReviews(User user, PageRequestDto requestDto) {
+    Pageable pageable = reviewService.getPageable(requestDto);
+    Page<Review> byReviewsByUser = likeRepository.findByReviewsByUser(user, pageable);
+
+    return new UserReviewResponseDto(user.getUserId(), byReviewsByUser);
+  }
+
   private Like findLikeByReviewIdAndUserId(Long reviewId, Long userId) {
     return likeRepository.findLikeByReviewIdAndUserId(reviewId, userId).orElse(null);
   }
+
 
 }

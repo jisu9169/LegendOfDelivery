@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface LikeRepository extends JpaRepository<Like,Long> {
+public interface LikeRepository extends JpaRepository<Like,Long>, LikeRepositoryCustom {
     Optional<Like> findLikeByReviewIdAndUserId(Long reviewId, Long userId);
 }

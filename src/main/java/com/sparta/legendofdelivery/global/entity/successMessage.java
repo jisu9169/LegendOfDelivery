@@ -12,7 +12,9 @@ public enum successMessage {
 
 
   LIKE_CREATED(200, "좋아요 등록에 성공했습니다."),
-  LIKE_REMOVED(200, "좋아요 취소를 성공했습니다.");
+  LIKE_REMOVED(200, "좋아요 취소를 성공했습니다."),
+  USER_LIKED_REVIEWS_FETCHED(200, "사용자가 좋아요 했던 게시글 목록 조회에 성공했습니다.");
+
 
   private final int status;
   private final String message;
