@@ -19,6 +19,9 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,9 +32,11 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class UserService {
 
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
@@ -116,6 +121,7 @@ public class UserService {
 
         User user = getUser();
         int myLikeReviewsCount = likeRepository.countLikedReviewsByUser(user.getId());
+        log.info("myLikeReviewsCount: {}", myLikeReviewsCount);
 
         return new DataResponse<>(200, "프로필 조회에 성공했습니다.", new UserProfileResponseDto(user, myLikeReviewsCount));
 

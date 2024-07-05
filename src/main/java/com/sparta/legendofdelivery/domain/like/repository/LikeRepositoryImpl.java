@@ -44,13 +44,14 @@ public class LikeRepositoryImpl implements LikeRepositoryCustom {
 
   @Override
   public int countLikedReviewsByUser(Long userId) {
-    QReview qReview = QReview.review;
+    QLike qLike = QLike.like;
 
-    return jpaQueryFactory
-        .selectFrom(qReview)
-        .where(qReview.user.id.eq(userId))
-        .fetch()
-        .size();
+    Long count = jpaQueryFactory
+        .select(qLike.count())
+        .from(qLike)
+        .where(qLike.user.id.eq(userId))
+        .fetchOne();
+    return count !=null ? count.intValue() : 0 ;
   }
 
 }
