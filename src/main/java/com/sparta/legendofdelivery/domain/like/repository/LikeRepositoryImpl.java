@@ -7,6 +7,7 @@ import com.sparta.legendofdelivery.domain.review.entity.QReview;
 import com.sparta.legendofdelivery.domain.review.entity.Review;
 import com.sparta.legendofdelivery.domain.user.entity.User;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -33,11 +34,7 @@ public class LikeRepositoryImpl implements LikeRepositoryCustom {
         .limit(pageable.getPageSize())
         .fetch();
 
-    long total = jpaQueryFactory
-        .selectFrom(qLike)
-        .where(qLike.user.eq(user))
-        .fetch()
-        .size();
+    int total = countLikedReviewsByUser(user.getId());
 
     return new PageImpl<>(reviewList, pageable, total);
   }
@@ -53,5 +50,4 @@ public class LikeRepositoryImpl implements LikeRepositoryCustom {
         .fetchOne();
     return count !=null ? count.intValue() : 0 ;
   }
-
 }
