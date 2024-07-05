@@ -1,6 +1,7 @@
 package com.sparta.legendofdelivery.domain.review.controller;
 
 
+import static com.sparta.legendofdelivery.global.entity.successMessage.REVIEW_CREATED;
 import static com.sparta.legendofdelivery.global.entity.successMessage.REVIEW_DELETION_SUCCESS;
 import static com.sparta.legendofdelivery.global.entity.successMessage.REVIEW_UPDATE_SUCCESS;
 import static com.sparta.legendofdelivery.global.entity.successMessage.STORE_REVIEWS_FETCHED;
@@ -42,8 +43,8 @@ public class ReviewController {
 
     return ResponseEntity.ok(
         new DataResponse<>(
-            STORE_REVIEWS_FETCHED.getStatus(),
-            STORE_REVIEWS_FETCHED.getMessage(),
+            REVIEW_CREATED.getStatus(),
+            REVIEW_CREATED.getMessage(),
             reviewService.createReview(requestDto)
         )
     );
