@@ -7,6 +7,13 @@ import org.springframework.data.domain.Pageable;
 
 public interface LikeRepositoryCustom {
 
-
+  /*
+  *  내가 좋아요한 댓글 모두 조회
+  * */
   Page<Review> findByReviewsByUser(User user, Pageable pageable);
+
+/*
+*
+* */
+  int countLikedReviewsByUser(Long userId);
 }
